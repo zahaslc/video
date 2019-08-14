@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiyou.mapper.SubjectDao">
+
+	<insert id="add" parameterType="com.zhiyou.model.Subject" keyColumn="subject_id"
+		keyProperty="subject_id" useGeneratedKeys="true">
+		insert into
+		subject(subject_name)
+		values(#{subject_name})
+	</insert>
+
+	<insert id="delete">
+		delete from subject where subject_id = #{subject_id}
+	</insert>
+
+	<update id="update" parameterType="com.zhiyou.model.Subject">
+		update subject
+		<set>
+			<choose>
+				<when test="subject_name!=null">
+					subject_name=#{subject_name}
+				</when>
+			</choose>
+		</set>
+		where subject_id=#{subject_id}
+	</update>
+
+	<resultMap type="com.zhiyou.model.Subject" id="subjectMap">
+		<id column="subject_id" property="subject_id" />
+		<result column="subject_name" property="subject_name" />
+	</resultMap>
+
+	<select id="selectOne" resultMap="subjectMap" parameterType="com.zhiyou.model.Subject">
+		select * from subject where subject_id = #{id}
+		
+	</select>
+	
+	<select id="selectAll" resultMap="subjectMap" parameterType="com.zhiyou.model.Subject">
+		select * from subject
+		
+	</select>
+
+	<select id="selectLike" resultMap="subjectMap" parameterType="com.zhiyou.model.Subject">
+		<include refid="a"></include>
+	</select>
+
+	<sql id="a">
+		select * from subject
+		<trim prefix="where" prefixOverrides="and"><!-- 添加指定前缀或者后缀 -->
+			
+			<if test="subject_desc!=null">
+				<bind name="subject_name" value="'%'+subject_name+'%'" />
+				and subject_name like #{subject_name}
+			</if>
+	
+		</trim>
+	</sql>
+
+	<delete id="deleteAll">
+		delete from subject where subject_id in
+
+		<foreach collection="array" item="ids" separator="," index="number"
+			open="(" close=")">
+			<!-- 什么时候使用$？什么时候使用#？ 不需要改变数据的时候 但是尽量使用# -->
+			#{number}
+		</foreach>
+
+	</delete>
+
+	<select id="selectLimit" resultMap="subjectMap">
+
+		select *from subject limit #{page},#{pageSize}
+	</select>
+</mapper>

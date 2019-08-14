@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiyou.mapper.SpeakerDao">
+
+	<insert id="add" parameterType="com.zhiyou.model.Speaker" keyColumn="id"
+		keyProperty="id" useGeneratedKeys="true">
+		insert into
+		speaker(speaker_name,speaker_desc,speaker_job,pic_url)
+		values(#{speaker_name},#{speaker_desc},#{speaker_job},#{pic_url})
+	</insert>
+
+	<insert id="delete">
+		delete from speaker where id = #{id}
+	</insert>
+
+	<update id="update" parameterType="com.zhiyou.model.Speaker">
+		update speaker
+		<set>
+
+			speaker_name=#{speaker_name},
+
+			speaker_desc=#{speaker_desc},
+
+			speaker_job=#{speaker_job},
+			
+			pic_url=#{pic_url}
+
+		</set>
+		where id=#{id}
+	</update>
+
+	<resultMap type="com.zhiyou.model.Speaker" id="speakerMap">
+		<id column="id" property="id" />
+		<result column="speaker_name" property="speaker_name" />
+		<result column="speaker_desc" property="speaker_desc" />
+		<result column="speaker_job" property="speaker_job" />
+		<result column="pic_url" property="pic_url" />
+	</resultMap>
+
+	<select id="selectOne" resultMap="speakerMap" parameterType="com.zhiyou.model.Speaker">
+		select * from speaker where id = #{id}
+
+	</select>
+
+	<select id="selectAll" resultMap="speakerMap" parameterType="com.zhiyou.model.Speaker">
+		select * from speaker
+
+	</select>
+
+	<select id="selectLike" resultMap="speakerMap" parameterType="com.zhiyou.model.Speaker">
+		<include refid="a"></include>
+	</select>
+
+	<sql id="a">
+		select * from speaker
+		<trim prefix="where" prefixOverrides="and"><!-- 添加指定前缀或者后缀 -->
+
+			<if test="speaker_name!=null">
+				<bind name="speaker_name" value="'%'+speaker_name+'%'" />
+				and speaker_name like #{speaker_name}
+			</if>
+			<if test="speaker_desc!=null">
+				<bind name="speaker_desc" value="'%'+speaker_desc+'%'" />
+				and speaker_desc like #{speaker_desc}
+			</if>
+
+		</trim>
+	</sql>
+
+	<delete id="deleteAll">
+		delete from speaker where id in
+
+		<foreach collection="array" item="ids" separator="," index="number"
+			open="(" close=")">
+			<!-- 什么时候使用$？什么时候使用#？ 不需要改变数据的时候 但是尽量使用# -->
+			#{ids}
+		</foreach>
+
+	</delete>
+
+	<select id="selectLimit" resultMap="speakerMap">
+
+		select *from speaker limit
+		#{page},#{pageSize}
+	</select>
+</mapper>

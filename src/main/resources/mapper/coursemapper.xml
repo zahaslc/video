@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiyou.mapper.CourseDao">
+
+	<insert id="add" parameterType="com.zhiyou.model.Course" keyColumn="id"
+		keyProperty="id" useGeneratedKeys="true">
+		insert into
+		course(course_title,course_desc,subject_id)
+		values(#{course_title},#{course_desc},#{subject_id})
+	</insert>
+
+	<insert id="delete">
+		delete from course where id = #{id}
+	</insert>
+
+	<update id="update" parameterType="com.zhiyou.model.Course">
+		update course
+		<set>
+
+			course_title=#{course_title},
+
+			course_desc=#{course_desc},
+
+			subject_id=#{subject_id}
+
+		</set>
+		where id=#{id}
+	</update>
+
+	<resultMap type="com.zhiyou.model.Course" id="courseMap">
+		<id column="id" property="id" />
+		<result column="course_title" property="course_title" />
+		<result column="course_desc" property="course_desc" />
+		<result column="subject_id" property="subject_id" />
+	</resultMap>
+
+	<select id="selectOne" resultMap="courseMap" parameterType="com.zhiyou.model.Course">
+		select * from course where id = #{id}
+
+	</select>
+
+	<select id="selectAll" resultMap="courseMap" parameterType="com.zhiyou.model.Course">
+		select * from course
+
+	</select>
+	
+	<select id="selectBySubject" resultMap="courseMap" parameterType="com.zhiyou.model.Course">
+		select * from course where subject_id = #{subject_id}
+
+	</select>
+
+	<select id="selectLike" resultMap="courseMap" parameterType="com.zhiyou.model.Course">
+		<include refid="a"></include>
+	</select>
+
+	<sql id="a">
+		select * from course
+		<trim prefix="where" prefixOverrides="and"><!-- 添加指定前缀或者后缀 -->
+
+			<if test="course_title!=null">
+				<bind name="course_title" value="'%'+course_title+'%'" />
+				and course_title like #{course_title}
+			</if>
+			<if test="course_desc!=null">
+				<bind name="course_desc" value="'%'+course_desc+'%'" />
+				and course_desc like #{course_desc}
+			</if>
+
+		</trim>
+	</sql>
+
+	<delete id="deleteAll">
+		delete from course where id in
+
+		<foreach collection="array" item="ids" separator="," index="number"
+			open="(" close=")">
+			<!-- 什么时候使用$？什么时候使用#？ 不需要改变数据的时候 但是尽量使用# -->
+			#{ids}
+		</foreach>
+
+	</delete>
+
+	<select id="selectLimit" resultMap="courseMap">
+
+		select *from course limit
+		#{page},#{pageSize}
+	</select>
+</mapper>

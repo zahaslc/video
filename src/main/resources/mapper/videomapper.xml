@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiyou.mapper.VideoDao">
+
+	<insert id="add" parameterType="com.zhiyou.model.Video" keyColumn="video_id"
+		keyProperty="video_id" useGeneratedKeys="true">
+		insert into
+		video(title,detall,time,speaker_id,course_id,video_url,image_url,paly_num)
+		values(#{title},#{detall},#{time},#{speaker_id},#{course_id},#{video_url},#{image_url},#{paly_num})
+	</insert>
+
+	<insert id="delete">
+		delete from video where video_id = #{video_id}
+	</insert>
+
+	<update id="update" parameterType="com.zhiyou.model.Video">
+		update video
+		<set>
+			title=#{title},
+			detall=#{detall},
+			time=#{time},
+			speaker_id=#{speaker_id},
+			course_id=#{course_id},
+			video_url=#{video_url},
+			image_url=#{image_url},
+			<if test="paly_num!=null || paly_num != ''">
+				paly_num=#{paly_num}
+			</if>
+		</set>
+		where video_id=#{video_id}
+	</update>
+
+	<resultMap type="com.zhiyou.model.Video" id="videoMap">
+		<id column="video_id" property="video_id" />
+		<result column="title" property="title" />
+		<result column="detall" property="detall" />
+		<result column="time" property="time" />
+		<result column="speaker_id" property="speaker_id" />
+		<result column="course_id" property="course_id" />
+		<result column="video_url" property="video_url" />
+		<result column="image_url" property="image_url" />
+		<result column="paly_num" property="paly_num" />
+		
+	</resultMap>
+
+	<select id="selectOne" parameterType="com.zhiyou.model.Video" resultMap="videoMap">
+		select * from video where video_id = #{video_id}
+
+	</select>
+	
+	<select id="selectOneCourse" parameterType="com.zhiyou.model.Video" resultMap="videoMap">
+		select * from video where course_id = #{course_id}
+
+	</select>
+
+	<select id="selectAll" resultMap="videoMap" parameterType="com.zhiyou.model.Video">
+		select * from video
+
+	</select>
+	
+	<select id="selectSpeakerAll" resultMap="videoMap" parameterType="com.zhiyou.model.Video">
+		select * from video where speaker_id = #{speaker_id}
+
+	</select>
+	
+	<select id="selectVideos" resultMap="videoMap" parameterType="com.zhiyou.model.Video">
+		select * from video where course_id in
+		
+		<foreach collection="array" item="ids" separator="," index="number"
+			open="(" close=")">
+			<!-- 什么时候使用$？什么时候使用#？ 不需要改变数据的时候 但是尽量使用# -->
+			#{ids}
+		</foreach>
+	</select>
+
+
+	<delete id="deleteAll">
+		delete from video where video_id in
+
+		<foreach collection="array" item="ids" separator="," index="number"
+			open="(" close=")">
+			<!-- 什么时候使用$？什么时候使用#？ 不需要改变数据的时候 但是尽量使用# -->
+			#{ids}
+		</foreach>
+
+	</delete>
+
+	<select id="selectLimit" resultMap="videoMap">
+
+		select *from video limit
+		#{page},#{pageSize}
+	</select>
+	
+	<select id="selectLikeCount" resultType="int">
+		select count(*) from video
+		<trim prefix="where" prefixOverrides="and"><!-- 添加指定前缀或者后缀 -->
+
+			<if test="title!=null || title != ''">
+				<!-- <bind name="title" value="'%+title+%'" /> -->
+				title like CONCAT(CONCAT('%',#{title},'%'))<!-- CONCAT(CONCAT('%',#{key},'%')) -->
+			</if>
+			<if test="speaker_id!=0 || speaker_id != ''">
+				<!-- <bind name="speaker_id" value="'%+speaker_id+%'" /> -->
+				and speaker_id = #{speaker_id}
+			</if>
+			<if test="course_id!=0 || course_id != ''">
+				<!-- <bind name="course_id" value="'%+course_id+%'" /> -->
+			 	and course_id = #{course_id}
+			</if>
+		</trim>
+	</select>
+	
+	<select id="selectLikeVideo" resultMap="videoMap">
+		select * from video
+		<trim prefix="where" prefixOverrides="and"><!-- 添加指定前缀或者后缀 -->
+
+			<if test="title!=null || title != ''">
+				<!-- <bind name="title" value="'%+title+%'" /> -->
+				title like CONCAT('%',#{title},'%')<!-- CONCAT(CONCAT('%',#{key},'%')) -->
+			</if>
+			<if test="speaker_id!=0 || speaker_id != ''">
+				<!-- <bind name="speaker_id" value="'%+speaker_id+%'" /> -->
+				and speaker_id = #{speaker_id}
+			</if>
+			<if test="course_id!=0 || course_id != ''">
+				<!-- <bind name="course_id" value="'%+course_id+%'" /> -->
+			 	and course_id = #{course_id}
+			</if>
+		</trim>
+		limit #{page},#{pageSize}
+	</select>
+</mapper>

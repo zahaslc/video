@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhiyou.mapper.AdminDao">
+
+	<insert id="add" parameterType="com.zhiyou.model.Admin" keyColumn="id"
+		keyProperty="id" useGeneratedKeys="true">
+		insert into
+		admin(accounts,password)
+		values(#{accounts},#{password})
+	</insert>
+
+	<insert id="delete">
+		delete from admin where admin_id = #{id}
+	</insert>
+
+	<update id="update" parameterType="com.zhiyou.model.Admin">
+		update admin
+		<set>
+			
+				<if test="accounts!=null">
+					accounts=#{accounts},
+				</if>
+				<if test="password!=null">
+					password=#{password},
+				</if>
+				<if test="admin_remark!=null">
+					admin_remark=#{admin_remark}
+				</if>
+			
+		</set>
+		where admin_id=#{admin_id}
+	</update>
+
+	<resultMap type="com.zhiyou.model.Admin" id="adminMap">
+		<id column="admin_id" property="admin_id" />
+		<result column="accounts" property="accounts" />
+		<result column="password" property="password" />
+		<result column="admin_remark" property="admin_remark" />
+	</resultMap>
+
+	<select id="selectByEmail" resultMap="adminMap" parameterType="com.zhiyou.model.Admin">
+		select * from admin where accounts = #{accounts}
+		
+	</select>
+	
+	<select id="selectAll" resultMap="adminMap" parameterType="com.zhiyou.model.Admin">
+		select * from admin
+		
+	</select>
+
+	<delete id="deleteAll">
+		delete from admin where admin_id in
+
+		<foreach collection="array" item="ids" separator="," index="number"
+			open="(" close=")">
+			<!-- 什么时候使用$？什么时候使用#？ 不需要改变数据的时候 但是尽量使用# -->
+			#{number}
+		</foreach>
+
+	</delete>
+
+	<select id="selectLimit" resultMap="adminMap">
+
+		select *from admin limit #{page},#{pageSize}
+	</select>
+</mapper>
