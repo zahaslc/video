@@ -18,59 +18,24 @@
 	content="Web前端视频教程,大数据视频教程,HTML5视频教程,UI视频教程,PHP视频教程,java视频教程,python基础教程">
 <meta name="description"
 	content="智游教育在线课程视频,为您提供java,python,HTML5,UI,PHP,大数据等学科经典视频教程在线浏览学习,精细化知识点解析,深入浅出,想学不会都难,智游教育,学习成就梦想！">
-<link rel="stylesheet" href="./static/z/base.css">
-<link rel="stylesheet" href="./static/z/profile.css">
+<link rel="stylesheet" href="http://localhost:8080/video/static/z/base.css">
+<link rel="stylesheet" href="http://localhost:8080/video/static/z/profile.css">
 
 <title>在线公开课-智游教育|java|大数据|HTML5|python|UI|PHP视频教程</title>
-<script src="./jquery/jquery-3.4.1.min.js"></script>
+<script src="http://localhost:8080/video/jquery/jquery-3.4.1.min.js"></script>
 <script
 	src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="./static/z/jquery-1.js"></script>
-<script src="./static/z/index.js"></script>
-<!-- <script type="text/javascript">
-	$().ready(function() {
-		$("#sub").validate({
-			rules : {
-				oldPassword : {
-					required : true
-				},
-				newPassword : {
-					required : true,
-					minlength : 6
-				},
-				newRPassword : {
-					required : true,
-					equalTo : "#newPassword"
-				}
-				
-			},
-				oldPassword : {
-					required : "请输入旧密码",
-				},
-				newPassword : {
-					required : "请输入新密码",
-					minlength : "密码长度不小于6",
-				},
-				newPassword : {
-					required : "请再次输入密码",
-					minlength : "密码长度不小于6",
-					equalTo : "两次输入不一样"
-				}
-			}
-		});
-	})
-</script> -->
+<script src="http://localhost:8080/video/static/z/jquery-1.js"></script>
+<script src="http://localhost:8080/video/static/z/index.js"></script>
+
 </head>
 
 
 <body class="w100">
 
-
-
-
 	<header>
 	<div class="container top_bar clearfix">
-		<img src="./static/z/logo.png" alt="智游">
+		<img src="http://localhost:8080/video/static/z/logo.png" alt="智游">
 		<div id="tele">
 			<span>4006-371-555</span> <span>0371-88888598</span>
 		</div>
@@ -85,9 +50,6 @@
 
 			<div id="user_bar">
 				<a> <img id="avatar" src="${user.imgurl }" alt="">
-
-
-
 
 				</a> <a href="exit">退出</a>
 			</div>
@@ -135,7 +97,7 @@
 							</div>
 							<div class="form_submit dd">
 								<input value="保　存" type="submit" id="sub"> <a
-									href="updatePasswordShow">取消</a>
+									href="updatePasswordShow?accounts=${user.accounts }">取消</a>
 							</div>
 						</form>
 					</div>
@@ -150,9 +112,9 @@
 	<footer>
 	<div class="container">
 		<ul>
-			<li><img src="./static/z/footer_logo.png" alt="" id="foot_logo"></li>
+			<li><img src="http://localhost:8080/video/static/z/footer_logo.png" alt="" id="foot_logo"></li>
 			<li>版权所有：智游3G教育 ©&nbsp;www.zhiyou100.com</li>
-			<li><img src="./static/z/a.png" alt="" id="wxgzh"></li>
+			<li><img src="http://localhost:8080/video/static/z/a.png" alt="" id="wxgzh"></li>
 		</ul>
 	</div>
 	</footer>
@@ -168,15 +130,17 @@
 		}),    */
 
 		function p() {
-			$.post({
+			$.ajax({
+				type : "post",
 				url : "http://localhost:8080/video/checkOldPassword",
 				data : {
-					oldPassword : $("#oldPassword").val()
+					oldPassword : $("#oldPassword").val(),
+					accounts : $("#accounts").val()
 				},
 				success : function(data) {
-					if (data == 1) {
+					if (data == 0) {
 						$("#oldMsg").text("旧密码错误");
-
+						$("#sub").attr("disabled", true);
 					} else {
 						$("#oldMsg").text("旧密码正确");
 						$("#sub").attr("disabled", false);
@@ -186,7 +150,8 @@
 		}
 		function checkP() {
 
-			$.post({
+			$.ajax({
+				type : "post",
 				url : "http://localhost:8080/video/checkRPassword",
 				data : {
 					newPassword : $("#newPassword").val(),
@@ -195,17 +160,15 @@
 				success : function(data) {
 					if (data == 1) {
 						$("#newMsg").text("两次输入密码不一致！");
-
+						$("#sub").attr("disabled", true);
 					} else {
 						$("#newMsg").text("密码一致！");
-
+						$("#sub").attr("disabled", false);
 					}
 				}
 			})
 		}
 	</script>
-
-
 
 </body>
 </html>

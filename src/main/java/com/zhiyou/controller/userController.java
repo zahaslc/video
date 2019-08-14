@@ -1,7 +1,9 @@
 package com.zhiyou.controller;
 
 import java.io.IOException;
+import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.zhiyou.model.User;
+import com.zhiyou.service.PictureService;
 import com.zhiyou.service.UserService;
 import com.zhiyou.utils.MD5Utils;
 import com.zhiyou.utils.VideoResult;
@@ -62,9 +65,9 @@ public class userController {
 
 	//修改密码
 	@RequestMapping("updatePassword")
-	public String updatePassword(String newPassword,String accounts){
+	public String updatePassword(String password,String accounts){
 		User user = us.selectByEmail(accounts);
-		String md5 = MD5Utils.md5(newPassword);
+		String md5 = MD5Utils.md5(password);
 		user.setPassword(md5);
 		us.update(user);
 		return "index";
@@ -72,19 +75,24 @@ public class userController {
 	
 	//检验原密码是否正确
 	@RequestMapping("checkOldPassword")
-	public void checkOldPassword(String oldPassword,String accounts,HttpServletResponse resp) throws IOException{
+	public void checkOldPassword(HttpServletRequest req,HttpServletResponse resp) throws IOException{
+		String oldPassword = req.getParameter("oldPassword");
+		String accounts = req.getParameter("accounts");
+		System.out.println(accounts+oldPassword);
 		User user = us.selectByEmail(accounts);
 		String md5 = MD5Utils.md5(user.getPassword());
 		if(oldPassword.equals(md5)){
-			resp.getWriter().write("0");
-		}else{
 			resp.getWriter().write("1");
+		}else{
+			resp.getWriter().write("0");
 		}
 	}
 
 	//检验新密码是否一致
 	@RequestMapping("checkRPassword")
-	public void checkRPassword(String newPassword,String newRPassword,HttpServletResponse resp) throws IOException{
+	public void checkRPassword(HttpServletRequest req,HttpServletResponse resp) throws IOException{
+		String newPassword = req.getParameter("newPassword");
+		String newRPassword = req.getParameter("newRPassword");
 		if(newPassword.equals(newRPassword)){
 			resp.getWriter().write("0");
 		}else{
@@ -92,13 +100,17 @@ public class userController {
 		}
 	}
 	
+	@Autowired
+	PictureService ps;
 	//修改頭像
 	@RequestMapping("updatePic")
 	public String updatePic(MultipartFile file,String accounts,Model model){
 		User user = us.selectByEmail(accounts);
-
+		Map map = ps.uploadPicture(file);
+		String imgurl = (String) map.get("url");
+		user.setImgurl(imgurl);
 		us.update(user);
-		model.addAttribute("user", VideoResult.ok(user));
+		model.addAttribute("user", user);
 
 		return "updatePic";
 	}
