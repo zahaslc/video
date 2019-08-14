@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 /**
  * 淘淘商城自定义响应结构
  */
-public class TaotaoResult {
+public class VideoResult {
 
     // 响应业务状态
     private Integer status;
@@ -19,33 +19,33 @@ public class TaotaoResult {
     // 响应中的数据
     private Object data;
 
-    public static TaotaoResult build(Integer status, String msg, Object data) {
-        return new TaotaoResult(status, msg, data);
+    public static VideoResult build(Integer status, String msg, Object data) {
+        return new VideoResult(status, msg, data);
     }
 
-    public static TaotaoResult ok(Object data) {
-        return new TaotaoResult(data);
+    public static VideoResult ok(Object data) {
+        return new VideoResult(data);
     }
 
-    public static TaotaoResult ok() {
-        return new TaotaoResult(null);
+    public static VideoResult ok() {
+        return new VideoResult(null);
     }
 
-    public TaotaoResult() {
+    public VideoResult() {
 
     }
 
-    public static TaotaoResult build(Integer status, String msg) {
-        return new TaotaoResult(status, msg, null);
+    public static VideoResult build(Integer status, String msg) {
+        return new VideoResult(status, msg, null);
     }
 
-    public TaotaoResult(Integer status, String msg, Object data) {
+    public VideoResult(Integer status, String msg, Object data) {
         this.status = status;
         this.msg = msg;
         this.data = data;
     }
 
-    public TaotaoResult(Object data) {
+    public VideoResult(Object data) {
         this.status = 200;
         this.msg = "OK";
         this.data = data;

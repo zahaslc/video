@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<!-- saved from url=(0044)http://localhost:8080/Voids/user/password.do -->
+<!-- saved from url=(0044)http://localhost:8080/Voids/user/password -->
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -22,7 +22,7 @@
 <link rel="stylesheet" href="./static/z/profile.css">
 
 <title>在线公开课-智游教育|java|大数据|HTML5|python|UI|PHP视频教程</title>
-<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="./jquery/jquery-3.4.1.min.js"></script>
 <script
 	src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="./static/z/jquery-1.js"></script>
@@ -78,9 +78,9 @@
 	<menu>
 		<div class="container clearfix">
 			<ul class="clearfix f_left">
-				<li><a href="home.do">首页</a></li>
+				<li><a href="home?accounts=${user.accounts }">首页</a></li>
 
-				<li class="menu_active"><a>个人中心</a></li>
+				<li class="menu_active"><a href="userShow?accounts=${user.accounts }">个人中心</a></li>
 			</ul>
 
 			<div id="user_bar">
@@ -89,7 +89,7 @@
 
 
 
-				</a> <a href="exit.do">退出</a>
+				</a> <a href="exit">退出</a>
 			</div>
 		</div>
 	</menu>
@@ -100,11 +100,11 @@
 		<h2>我的资料</h2>
 		<div id="profile_tab">
 			<ul class="profile_tab_header f_left clearfix">
-				<li><a href="updateUserShow.do?accounts=${user.accounts }">更改资料</a></li>
+				<li><a href="updateUserShow?accounts=${user.accounts }">更改资料</a></li>
 				<li class="profile_tab_line">|</li>
-				<li><a href="updatePicShow.do?accounts=${user.accounts }">更改头像</a></li>
+				<li><a href="updatePicShow?accounts=${user.accounts }">更改头像</a></li>
 				<li class="profile_tab_line">|</li>
-				<li><a href="updatePasswordShow.do?accounts=${user.accounts }">密码安全</a></li>
+				<li><a href="updatePasswordShow?accounts=${user.accounts }">密码安全</a></li>
 			</ul>
 			<div class="proflle_tab_body">
 				<div class="proflle_tab_workplace clearfix">
@@ -118,7 +118,7 @@
 
 					</div>
 					<div class="profile_ifo_area">
-						<form action="updatePassword.do" method="post">
+						<form action="updatePassword" method="post">
 							<input type="hidden" name="accounts" value="${user.accounts }"
 								id="accounts">
 							<div class="form_group">
@@ -127,7 +127,7 @@
 							</div>
 							<div class="form_group">
 								<span class="dd">新 密 码：</span> <input id="newPassword"
-									type="password" name="password">
+									type="password" onblur="checkP()" name="password">
 							</div>
 							<div class="form_group">
 								<span class="dd">确认新密码：</span> <input id="newRPassword"
@@ -135,7 +135,7 @@
 							</div>
 							<div class="form_submit dd">
 								<input value="保　存" type="submit" id="sub"> <a
-									href="updatePasswordShow.do">取消</a>
+									href="updatePasswordShow">取消</a>
 							</div>
 						</form>
 					</div>
@@ -158,26 +158,25 @@
 	</footer>
 
 	<script type="text/javascript">
- /* 	  $().ready(function() {
-		$("#sub").attr("disabled", true);
-		$("#oldPassword").blur(p);
-		$("#newPassword").blur(checkP);
-		$("#newRPassword").blur(checkP);
-		$("#sub").lick(p);
-		$("#sub").lick(checkP);
-	}),   */ 
-	
-	
-	function p() {
+		 	  /* $().ready(function() {
+			$("#sub").attr("disabled", true);
+			$("#oldPassword").blur(p);
+			$("#newPassword").blur(checkP);
+			$("#newRPassword").blur(checkP);
+			$("#sub").lick(p);
+			$("#sub").lick(checkP);
+		}),    */
+
+		function p() {
 			$.post({
-				url : "checkOldPassword.do",
+				url : "http://localhost:8080/video/checkOldPassword",
 				data : {
 					oldPassword : $("#oldPassword").val()
 				},
 				success : function(data) {
 					if (data == 1) {
 						$("#oldMsg").text("旧密码错误");
-						
+
 					} else {
 						$("#oldMsg").text("旧密码正确");
 						$("#sub").attr("disabled", false);
@@ -188,7 +187,7 @@
 		function checkP() {
 
 			$.post({
-				url : "http://localhost:8080/SSM/checkRPassword.do",
+				url : "http://localhost:8080/video/checkRPassword",
 				data : {
 					newPassword : $("#newPassword").val(),
 					newRPassword : $("#newRPassword").val()
@@ -196,10 +195,10 @@
 				success : function(data) {
 					if (data == 1) {
 						$("#newMsg").text("两次输入密码不一致！");
-						
+
 					} else {
 						$("#newMsg").text("密码一致！");
-						
+
 					}
 				}
 			})

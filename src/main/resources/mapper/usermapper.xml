@@ -2,5 +2,132 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zhiyou.mapper.UserDao">
 
+	<insert id="add" parameterType="com.zhiyou.model.User" keyColumn="id"
+		keyProperty="id" useGeneratedKeys="true">
+		insert into
+		user(accounts,password)
+		values(#{accounts},#{password})
+	</insert>
 
+	<insert id="delete">
+		delete from user where id = #{id}
+	</insert>
+
+	<update id="update" parameterType="com.zhiyou.model.User">
+		update user
+		<set>
+			<if test="accounts!=null">
+				accounts=#{accounts},
+			</if>
+			<if test="phone!=null">
+				phone=#{phone},
+			</if>
+			<if test="password!=null">
+				password=#{password},
+			</if>
+			<if test="nickname!=null">
+				nickname=#{nickname},
+			</if>
+			<if test="sex!=null">
+				sex=#{sex},
+			</if>
+			<if test="birthday!=null">
+				birthday=#{birthday},
+			</if>
+			<if test="address!=null">
+				address=#{address},
+			</if>
+			<if test="imgurl!=null">
+				imgurl=#{imgurl},
+			</if>
+			<if test="createtime!=null">
+				createtime=#{createtime}
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<resultMap type="com.zhiyou.model.User" id="userMap">
+		<id column="id" property="id" />
+		<result column="accounts" property="accounts" />
+		<result column="phone" property="phone" />
+		<result column="password" property="password" />
+		<result column="nickname" property="nickname" />
+		<result column="sex" property="sex" />
+		<result column="birthday" property="birthday" />
+		<result column="address" property="address" />
+		<result column="imgurl" property="imgurl" />
+		<result column="createtime" property="createtime" />
+	</resultMap>
+
+	<select id="selectByEmail" parameterType="com.zhiyou.model.User" resultMap="userMap">
+		select * from user where accounts = #{accounts}
+
+	</select>
+
+	<select id="selectById" parameterType="com.zhiyou.model.User" resultMap="userMap">
+		select *
+		from user where id = #{id}
+
+	</select>
+
+	<select id="checkPassword" parameterType="com.zhiyou.model.User" resultMap="userMap">
+		select * from user where accounts = #{accounts} and password =
+		#{password}
+
+	</select>
+
+	<select id="selectAll" resultMap="userMap" parameterType="com.zhiyou.model.User">
+		select * from user
+		<where><!-- 去掉紧跟的第一个and -->
+			<if test="id!=null">
+				id=#{id}
+			</if>
+			<if test="accounts!=null">
+				and accounts=#{accounts}
+			</if>
+			<if test="nickname!=null">
+				and nickname=#{nickname}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectLike" resultMap="userMap" parameterType="com.zhiyou.model.User">
+		<include refid="a"></include>
+	</select>
+
+	<sql id="a">
+		select * from user
+		<trim prefix="where" prefixOverrides="and"><!-- 添加指定前缀或者后缀 -->
+			<if test="id!=null">
+				<bind name="id" value="'%'+id+'%'" />
+				user_id like #{id}
+			</if>
+			<if test="name!=null">
+				<bind name="name" value="'%'+name+'%'" />
+				and user_name like #{name}
+			</if>
+			<if test="password!=null">
+				<bind name="password" value="'%'+password+'%'" />
+				and user_password like #{password}
+			</if>
+		</trim>
+	</sql>
+
+	<delete id="deleteAll">
+		delete from user where user_id in
+
+		<foreach collection="array" item="ids" separator="," index="number"
+			open="(" close=")">
+			<!-- 什么时候使用$？什么时候使用#？ 不需要改变数据的时候 但是尽量使用# -->
+			#{number}
+		</foreach>
+
+	</delete>
+
+	<select id="selectLimit" resultMap="userMap">
+
+		select *from user limit
+		#{page},#{pageSize}
+	</select>
 </mapper>

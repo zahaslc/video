@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<!-- saved from url=(0041)http://localhost:8080/Voids/user/chart.do -->
+<!-- saved from url=(0041)http://localhost:8080/Voids/user/chart -->
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -38,16 +38,16 @@
 	<menu>
 		<div class="container clearfix">
 			<ul class="clearfix f_left">
-				<li><a href="home.do">首页</a></li>
+				<li><a href="home?accounts=${user.accounts }">首页</a></li>
 
-				<li class="menu_active"><a>个人中心</a></li>
+				<li class="menu_active"><a href="userShow?accounts=${user.accounts }">个人中心</a></li>
 			</ul>
 
 			<div id="user_bar">
-				<a> <img id="avatar" src="${user1.imgurl }" alt="">
+				<a> <img id="avatar" src="${user.imgurl }" alt="">
 
 
-				</a> <a href="exit.do">退出</a>
+				</a> <a href="exit">退出</a>
 			</div>
 		</div>
 	</menu>
@@ -59,11 +59,11 @@
 		<div id="profile_tab">
 			<ul class="profile_tab_header f_left clearfix">
 				<ul class="profile_tab_header f_left clearfix">
-					<li><a href="updateUserShow.do?accounts=${user.accounts }">更改资料</a></li>
+					<li><a href="updateUserShow?accounts=${user.accounts }">更改资料</a></li>
 					<li class="profile_tab_line">|</li>
-					<li><a href="updatePicShow.do?accounts=${user.accounts }">更改头像</a></li>
+					<li><a href="updatePicShow?accounts=${user.accounts }">更改头像</a></li>
 					<li class="profile_tab_line">|</li>
-					<li><a href="updatePasswordShow.do?accounts=${user.accounts }">密码安全</a></li>
+					<li><a href="updatePasswordShow?accounts=${user.accounts }">密码安全</a></li>
 				</ul>
 			</ul>
 			<div class="proflle_tab_body">
@@ -77,7 +77,7 @@
 					</div>
 					<div class="profile_ifo_area">
 						
-						<form action="updatePic.do" enctype="multipart/form-data" method="post">
+						<form action="updatePic" enctype="multipart/form-data" method="post">
 							<input type="hidden" name="accounts" value="${user.accounts }">
 							<p>第一步：请选择图像文件</p>
 							<div>

@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<!-- saved from url=(0038)http://localhost:8080/Voids/user/go.do -->
+<!-- saved from url=(0038)http://localhost:8080/Voids/user/go -->
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -27,7 +27,7 @@
 <link rel="stylesheet" href="./static/z/base.css" type="text/css">
 <link rel="stylesheet" href="./static/z/css.css" type="text/css">
 <link rel="icon"
-	href="http://localhost:8080/SSM/WEB-INF/static/z/favicon.png"
+	href="http://localhost:8080/video/WEB-INF/static/z/favicon.png"
 	type="image/png">
 
 <link rel="stylesheet"
@@ -51,7 +51,7 @@
 			<a id="login_open"><img src="static/z/we.png">登录</a> <a
 				id="reg_open"><img src="static/z/we.png" draggable="false">注册</a>
 			<a id="user_pic" style="display: none"
-				href="userShow.do?accounts=${user.accounts }"><span>@qq.com</span><img
+				href="userShow?accounts=${user.accounts }"><span>@qq.com</span><img
 				id="avatar" src="${user.imgurl }" draggable="false"
 				style="height: 30px"></a>
 		</div>
@@ -231,7 +231,7 @@
 				<img src="./static/z/logo.png" alt="" class="ma">
 			</div>
 			<div class="mask_content_body">
-				<form action="login.do" method="post">
+				<form action="login" method="post">
 					<h3>快速登录</h3>
 					<input id="accounts_login" placeholder="请输入邮箱" name="accounts"
 						type="email" onblur="user_accounts_login()"> <span
@@ -258,7 +258,7 @@
 				<img src="./static/z/logo.png" alt="" class="ma">
 			</div>
 			<div class="mask_content_body">
-				<form action="insertUser.do" method="post">
+				<form action="insertUser" method="post">
 					<h3>新用户注册</h3>
 					<input placeholder="请输入邮箱" name="accounts" type="email"
 						id="accounts" onblur="user_accounts_reg()"> <span
@@ -275,7 +275,7 @@
 	</div>
 
 	<!-- 管理员登录 -->
-	<form action="adminLogin.do" id="form">
+	<form action="adminLogin" id="form">
 		<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
 			aria-labelledby="myModalLabel" aria-hidden="true">
 			<div class="modal-dialog">
@@ -315,13 +315,13 @@
 
 		function back() {
 
-			location.href = "http://localhost:8080/SSM/index.jsp";
+			location.href = "http://localhost:8080/video/index";
 		}
 
 		//用户登录验证
 		function user_accounts_login() {
 			$.post({
-				url : "user_accounts_login.do",
+				url : "user_accounts_login",
 				data : {
 					accountsCheck_login : $("#accounts_login").val(),
 				},
@@ -340,7 +340,7 @@
 		//管理员登录验证
 		function accountsAdminCheck() {
 			$.post({
-				url : "accountsAdminCheck.do",
+				url : "accountsAdminCheck",
 				data : {
 					accountsAdmin : $("#accountsAdmin").val(),
 
@@ -360,7 +360,7 @@
 		//注册验证
 		function user_accounts_reg() {
 			$.post({
-					url : "user_accounts_reg.do",
+					url : "user_accounts_reg",
 					data : {
 						accountsCheck : $("#accounts").val(),
 					},
@@ -378,53 +378,7 @@
 		}
 
 	
-		function web() {
-			if (${user.accounts == null}) {
-				alert("请先登录");
-			} else {
-				location.href = "webShow.do?subject_id=" + 1;
-			}
-		}
-
-		function ui() {
-			if (${user.accounts == null}) {
-				alert("请先登录");
-			} else {
-				location.href = "webShow.do?subject_id=" + 6;
-			}
-		}
-		function python() {
-			if (${user.accounts == null}) {
-				alert("请先登录");
-			} else {
-				location.href = "webShow.do?subject_id=" + 10;
-			}
-		}
-		function php() {
-			if (${user.accounts == null}) {
-				alert("请先登录");
-			} else {
-				location.href = "webShow.do?subject_id=" + 11;
-			}
-		}
-	</script>
-
-
-	<c:if test="${accounts != null }">
-		<script type="text/javascript">
-			document.getElementById("login_open").style.display = "none";
-			document.getElementById("reg_open").style.display = "none";
-			document.getElementById("user_pic").style.display = "inline";
-		</script>
-	</c:if>
-
-
-	<c:if test="${msg!=null}">
-		<script type="text/javascript">
-			alert('${msg}');
-		</script>
-	</c:if>
-
+		
 	<script src="./static/z/jquery-1.js"></script>
 
 	<script src="./static/z/index.js"></script>

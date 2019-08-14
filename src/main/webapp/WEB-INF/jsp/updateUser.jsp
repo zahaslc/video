@@ -40,9 +40,9 @@
 	<menu>
 		<div class="container clearfix">
 			<ul class="clearfix f_left">
-				<li><a href="home.do">首页</a></li>
+				<li><a href="home?accounts=${user.accounts }">首页</a></li>
 
-				<li class="menu_active"><a href="userShow.do">个人中心</a></li>
+				<li class="menu_active"><a href="userShow?accounts=${user.accounts }">个人中心</a></li>
 			</ul>
 
 			<div id="user_bar">
@@ -51,7 +51,7 @@
 
 
 
-				</a> <a href="exit.do">退出</a>
+				</a> <a href="exit">退出</a>
 			</div>
 		</div>
 	</menu>
@@ -63,13 +63,13 @@
 		<div id="profile_tab">
 			<ul class="profile_tab_header f_left clearfix">
 				<li><a
-					href="updateUserShow.do?accounts=${user.accounts }?id=${user.id }">更改资料</a></li>
+					href="updateUserShow?accounts=${user.accounts }">更改资料</a></li>
 				<li class="profile_tab_line">|</li>
 				<li><a
-					href="updatePicShow.do?accounts=${user.accounts }?id=${user.id }">更改头像</a></li>
+					href="updatePicShow?accounts=${user.accounts }">更改头像</a></li>
 				<li class="profile_tab_line">|</li>
 				<li><a
-					href="updatePasswordShow.do?accounts=${user.accounts }?id=${user.id }">密码安全</a></li>
+					href="updatePasswordShow?accounts=${user.accounts }">密码安全</a></li>
 			</ul>
 			<div class="proflle_tab_body">
 				<div class="proflle_tab_workplace clearfix">
@@ -80,7 +80,7 @@
 					</div>
 					<div class="profile_ifo_area">
 
-						<form action="updateUser.do">
+						<form action="updateUser">
 
 							<div class="form_group">
 								<span class="dd">昵 称：</span> <input name="nickname" type="text"
@@ -112,8 +112,8 @@
 								<input name="birthday" type="text" value="${user.birthday }">
 							</div>
 							<div class="form_group">
-								<span class="dd">邮 箱：</span> <input type="text" name="accounts"
-									value="${user.accounts }">
+								
+								<span class="dd">邮 箱：</span>${user.accounts }
 							</div>
 							<div class="form_group">
 
@@ -166,6 +166,7 @@
 
 							</div>
 							<div class="form_submit dd">
+								<input type="hidden" name="accounts" value="${user.accounts }">
 								<input value="保　存" type="submit"> <a onclick="back()">重置</a>
 							</div>
 
@@ -311,7 +312,7 @@
 		});
 
 		function back() {
-			location.href = "updateUserShow.do";
+			location.href = "updateUserShow";
 		}
 	</script>
 
