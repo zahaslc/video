@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<!-- saved from url=(0052)http://localhost:8080/Voids/controller/courseShow.do -->
+<!-- saved from url=(0052)http://localhost:8080/Voids/controller/courseShow -->
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -49,14 +49,14 @@ th {
 		<div class="collapse navbar-collapse"
 			id="bs-example-navbar-collapse-9">
 			<ul class="nav navbar-nav">
-				<li class="active"><a href="VideoShow.do">视频管理</a></li>
-				<li class="active"><a href="SpeakerShow.do">主讲人管理</a></li>
-				<li class="active"><a href="CourseShow.do">课程管理</a></li>
+				<li class="active"><a href="VideoShow">视频管理</a></li>
+				<li class="active"><a href="SpeakerShow">主讲人管理</a></li>
+				<li class="active"><a href="CourseShow">课程管理</a></li>
 			</ul>
 			<p class="navbar-text navbar-right">
 				<span>${admin.accounts }</span> <i
 					class="glyphicon glyphicon-log-in" aria-hidden="true"></i>&nbsp;&nbsp;<a
-					class="navbar-link" href="exit.do">退出</a>
+					class="navbar-link" href="exit">退出</a>
 			</p>
 		</div>
 		<!-- /.navbar-collapse -->
@@ -105,8 +105,8 @@ th {
 							<th>${i.speaker_name }</th>
 							<th>${i.speaker_job }</th>
 							<th>${i.speaker_desc }</th>
-							<th><a href="updateSpeakerShow.do?id=${i.id }">✎</a></th>
-							<th><a href="deleteSpeaker.do?id=${i.id }">X</a></th>
+							<th><a href="updateSpeakerShow?id=${i.id }">✎</a></th>
+							<th><a href="deleteSpeaker?id=${i.id }">X</a></th>
 						</tr>
 					</c:forEach>
 
@@ -122,7 +122,7 @@ th {
 
 						<td><c:if test="${ key==null}">
 								<c:forEach var="i" begin="1" end="${page}">
-									<a href="SpeakerShow.do?page=${i}">第${i}页</a>
+									<a href="SpeakerShow?page=${i}">第${i}页</a>
 								</c:forEach>
 							</c:if></td>
 					</tr>
@@ -134,7 +134,7 @@ th {
 
 	<script type="text/javascript">
 		function showAddPage() {
-			location.href = "addSpeakerShow.do";
+			location.href = "addSpeakerShow";
 		}
 
 		var isCheckAll = false;
@@ -162,9 +162,9 @@ th {
 	    		}	
 	    	})
 	    	if(selected == ""|| selected == null){
-	    		location.href= "SpeakerShow.do?";
+	    		location.href= "SpeakerShow?";
 	    	}else{
-	    		location.href= "deleteSpeakerSome.do?selected="+selected;
+	    		location.href= "deleteSpeakerSome?selected="+selected;
 	    	}
 	    }
 

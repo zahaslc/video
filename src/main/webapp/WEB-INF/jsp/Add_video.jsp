@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<!-- saved from url=(0047)http://localhost:8080/Voids/Course/addCourse.do -->
+<!-- saved from url=(0047)http://localhost:8080/Voids/Course/addCourse -->
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -49,14 +49,14 @@ b {
 		<div class="collapse navbar-collapse"
 			id="bs-example-navbar-collapse-9">
 			<ul class="nav navbar-nav">
-				<li class="active"><a href="VideoShow.do">视频管理</a></li>
-				<li class="active"><a href="SpeakerShow.do">主讲人管理</a></li>
-				<li class="active"><a href="CourseShow.do">课程管理</a></li>
+				<li class="active"><a href="VideoShow">视频管理</a></li>
+				<li class="active"><a href="SpeakerShow">主讲人管理</a></li>
+				<li class="active"><a href="CourseShow">课程管理</a></li>
 			</ul>
 			<p class="navbar-text navbar-right">
 				<span>${admin.accounts }</span> <i
 					class="glyphicon glyphicon-log-in" aria-hidden="true"></i>&nbsp;&nbsp;<a
-					class="navbar-link" href="exit.do">退出</a>
+					class="navbar-link" href="exit">退出</a>
 			</p>
 		</div>
 	</div>
@@ -72,7 +72,7 @@ b {
 
 	<div class="container" style="margin-top: 20px;">
 
-		<form action="addVideo.do" id="infoForm" class="form-horizontal"
+		<form action="addVideo" id="infoForm" class="form-horizontal"
 			method="post">
 
 			<div class="form-group">
