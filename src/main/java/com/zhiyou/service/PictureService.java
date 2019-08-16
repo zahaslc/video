@@ -1,11 +1,18 @@
 package com.zhiyou.service;
 
-import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.zhiyou.model.ImageReturnType;
+
+
 public interface PictureService {
 
-	Map uploadPicture(MultipartFile uploadFile);
+	//Map uploadFile(MultipartFile uploadFile);
+	
+	ImageReturnType upload(MultipartFile uploadFile);
+	//FastDFSClient uploadFile(MultipartFile uploadFile) throws Exception;
 
+	//String generateImageName();
+	
 }

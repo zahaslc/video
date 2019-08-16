@@ -27,10 +27,10 @@
 <script>
 function notNull()
 {
-    var name = document.form.nickname.vlaue;
-    var birthday = document.form.birthday.vlaue;
+    var birthday = document.getElementById("birthday").value
+    var nickname = document.getElementById("nickname").value
     
-    if(name == ""){
+    if(nickname == ""){
     	alert("昵称不能为空");
     	return false;
     }else if(birthday == ""){
@@ -40,15 +40,11 @@ function notNull()
     	return true;
     }
 }
-
 </script>
 
 </head>
 
 <body class="w100">
-
-
-
 
 	<header>
 	<div class="container top_bar clearfix">
@@ -67,8 +63,6 @@ function notNull()
 
 			<div id="user_bar">
 				<a> <img id="avatar" src="${user.imgurl }" alt="">
-
-
 
 
 				</a> <a href="exit">退出</a>
@@ -187,7 +181,8 @@ function notNull()
 							</div>
 							<div class="form_submit dd">
 								<input type="hidden" name="accounts" value="${user.accounts }">
-								<input value="保　存" type="submit" id="sub" onclick="return notNull()"> <a onclick="back()">重置</a>
+								<input value="保　存" type="submit" id="sub" onclick="return notNull()"> 
+								<a onclick="back()">重置</a>
 							</div>
 
 						</form>

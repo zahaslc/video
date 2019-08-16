@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.zhiyou.model.Speaker;
 
-
 public interface SpeakerDao {
 	void add(Speaker speaker);
     void delete(int id);

@@ -3,12 +3,8 @@ package com.zhiyou.mapper;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.stereotype.Repository;
-
 import com.zhiyou.model.User;
 
-
-@Repository
 public interface UserDao {
 	
 	void add(User user);

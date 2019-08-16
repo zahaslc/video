@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.zhiyou.model.Course;
 
+
 public interface CourseDao {
 	
 	void add(Course course);

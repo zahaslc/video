@@ -96,7 +96,7 @@
 									type="password" onblur="checkP()"> <span id="newMsg"></span>
 							</div>
 							<div class="form_submit dd">
-								<input value="保　存" type="submit" id="sub"> <a
+								<input value="保　存" type="submit" id="sub" onclick="return notNull()"> <a
 									href="updatePasswordShow?accounts=${user.accounts }">取消</a>
 							</div>
 						</form>
@@ -119,15 +119,21 @@
 	</div>
 	</footer>
 
+	<script>
+function notNull()
+{
+    var newPassword = document.getElementById("newPassword").value
+
+    if(newPassword == ""||newPassword==null){
+    	alert("新密码不能为空");
+    	return false;
+    }else{
+    	return true;
+    }
+}
+</script>
+
 	<script type="text/javascript">
-		 	  /* $().ready(function() {
-			$("#sub").attr("disabled", true);
-			$("#oldPassword").blur(p);
-			$("#newPassword").blur(checkP);
-			$("#newRPassword").blur(checkP);
-			$("#sub").lick(p);
-			$("#sub").lick(checkP);
-		}),    */
 
 		function p() {
 			$.ajax({

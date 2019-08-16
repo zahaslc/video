@@ -214,7 +214,7 @@
 	<script type="text/javascript">
 		function back() {
 
-			location.href = "http://localhost:8080/SSM/index.jsp";
+			location.href = "http://localhost:8080/video/index";
 		}
 	</script>
 	<div class="mask hidden" id="reg">

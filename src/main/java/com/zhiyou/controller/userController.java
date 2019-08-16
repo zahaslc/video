@@ -1,10 +1,12 @@
 package com.zhiyou.controller;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,11 +14,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.zhiyou.model.ImageReturnType;
 import com.zhiyou.model.User;
 import com.zhiyou.service.PictureService;
 import com.zhiyou.service.UserService;
 import com.zhiyou.utils.MD5Utils;
+import com.zhiyou.utils.MainUtil;
 import com.zhiyou.utils.VideoResult;
+import com.zhiyou.utils.verifyCodeUtils;
 
 @Controller
 public class userController {
@@ -52,7 +57,7 @@ public class userController {
 	//退出功能
 	@RequestMapping("exit")
 	public String exit(){
-		
+
 		return "index";
 	}
 	//返回首页
@@ -72,16 +77,16 @@ public class userController {
 		us.update(user);
 		return "index";
 	}
-	
+
 	//检验原密码是否正确
 	@RequestMapping("checkOldPassword")
 	public void checkOldPassword(HttpServletRequest req,HttpServletResponse resp) throws IOException{
 		String oldPassword = req.getParameter("oldPassword");
 		String accounts = req.getParameter("accounts");
-		System.out.println(accounts+oldPassword);
+
 		User user = us.selectByEmail(accounts);
-		String md5 = MD5Utils.md5(user.getPassword());
-		if(oldPassword.equals(md5)){
+		String md5 = MD5Utils.md5(oldPassword);
+		if(md5.equals(user.getPassword())){
 			resp.getWriter().write("1");
 		}else{
 			resp.getWriter().write("0");
@@ -99,17 +104,19 @@ public class userController {
 			resp.getWriter().write("1");
 		}
 	}
-	
+
 	@Autowired
 	PictureService ps;
 	//修改頭像
 	@RequestMapping("updatePic")
 	public String updatePic(MultipartFile file,String accounts,Model model){
 		User user = us.selectByEmail(accounts);
-		Map map = ps.uploadPicture(file);
-		String imgurl = (String) map.get("url");
+		ImageReturnType returnType = ps.upload(file);
+		
+		String imgurl = returnType.getUrl();
 		user.setImgurl(imgurl);
 		us.update(user);
+		System.out.println(returnType+"**********"+imgurl+"**************"+file);
 		model.addAttribute("user", user);
 
 		return "updatePic";
@@ -128,5 +135,101 @@ public class userController {
 		model.addAttribute("user", user);
 		System.out.println(user);
 		return "userShow";
+	}
+
+	//登录用户的账号是否存在
+	@RequestMapping("userAccountsLogin")
+	public void userAccountsLogin(HttpServletRequest req,HttpServletResponse resp) throws IOException{
+
+		String accountsCheckLogin = req.getParameter("accountsCheckLogin");
+		User user = us.selectByEmail(accountsCheckLogin);
+		if(accountsCheckLogin != ""){
+			if(null == user){
+				resp.getWriter().write("1");
+			}else{
+				resp.getWriter().write("0");
+			}
+		}else{
+			resp.getWriter().write("2");
+		}
+	}
+
+	//登录用户(将用户信息存入cookie，10天后自动销毁，或者手动销毁)
+	@RequestMapping("login")
+	public String login(String accounts,String password,Model model,HttpServletRequest req){
+		User user = us.selectByEmail(accounts);
+		String md5 = MD5Utils.md5(password);
+		if(md5.equals(user.getPassword())){
+			req.setAttribute("msg", "密码正确");
+			model.addAttribute("user", user);
+			return "index";
+		}else{
+			req.setAttribute("msg", "密码错误");
+		}
+		return "index";
+	}
+
+	//用户注册
+	@RequestMapping("insertUser")
+	public String insertUser(String accounts,String psw){
+		User user = new User();
+		String md5 = MD5Utils.md5(psw);
+		user.setAccounts(accounts);
+		user.setPassword(md5);
+		user.setCreatetime(new Date());
+		us.add(user);
+		return "index";
+	}
+
+	//用户注册验证(邮箱)
+	@RequestMapping("user_accounts_reg")
+	public void user_accounts_reg(HttpServletRequest req,HttpServletResponse resp) throws IOException{
+		String accountsCheck = req.getParameter("accountsCheck");
+		User user = us.selectByEmail(accountsCheck);
+		if(accountsCheck == ""){
+			resp.getWriter().write("1");
+		}else{
+			if(user == null){
+				resp.getWriter().write("0");
+			}else{
+				resp.getWriter().write("2");
+			}
+		}
+	}
+
+	//用户注册验证(密码)
+	//检验新密码是否一致
+	@RequestMapping("checkPassword")
+	public void checkPassword(HttpServletRequest req,HttpServletResponse resp) throws IOException{
+		String psw = req.getParameter("psw");
+		String psw_again = req.getParameter("psw_again");
+		if(psw == ""){
+			resp.getWriter().write("1");
+		}else{
+			if(psw_again.equals(psw)){
+				resp.getWriter().write("0");
+			}else{
+				resp.getWriter().write("2");
+			}
+		}
+	}
+
+
+	//用户注册(获取并发送验证码)
+	@RequestMapping("getVerifyCode")
+	public void getVerifyCode(Model model,HttpServletRequest req,HttpSession session){
+		String accounts = req.getParameter("email");
+
+		StringBuilder verifyCode = verifyCodeUtils.getVerifyCode();
+		System.out.println(accounts+"*******"+verifyCode);
+		session.setAttribute("verifyCode", verifyCode);
+		MainUtil.setMain(accounts,new String(verifyCode));
+	}
+
+	//用户注册(清除session中的验证码)
+	@RequestMapping("removeSession")
+	public void removeSession(HttpServletRequest req){
+		req.getSession().invalidate();
+
 	}
 }

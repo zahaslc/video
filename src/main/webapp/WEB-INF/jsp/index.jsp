@@ -24,11 +24,8 @@
 	content="智游教育在线课程视频,为您提供java,python,HTML5,UI,PHP,大数据等学科经典视频教程在线浏览学习,精细化知识点解析,深入浅出,想学不会都难,智游教育,学习成就梦想！">
 
 
-<link rel="stylesheet" href="./static/z/base.css" type="text/css">
-<link rel="stylesheet" href="./static/z/css.css" type="text/css">
-<link rel="icon"
-	href="http://localhost:8080/video/WEB-INF/static/z/favicon.png"
-	type="image/png">
+<link rel="stylesheet" href="http://localhost:8080/video/static/z/base.css" type="text/css">
+<link rel="stylesheet" href="http://localhost:8080/video/static/z/css.css" type="text/css">
 
 <link rel="stylesheet"
 	href=".\css\font-awesome-4.7.0\css\font-awesome.min.css"
@@ -188,7 +185,7 @@
 	<!--页脚-->
 	<footer>
 	<ul>
-		<li><img src="./static/z/footer_logo.png" alt=""
+		<li><img src="http://localhost:8080/video/static/z/footer_logo.png" alt=""
 			draggable="false"></li>
 		<li class="mt25">
 			<h3>各校区地址</h3>
@@ -213,9 +210,9 @@
 				<li>电话:4006-371-555 0371-88888598</li>
 				<li class="erwei"><br>
 					<div>
-						<img class="weixin" src="./static/z/a_002.png" alt=""
+						<img class="weixin" src="http://localhost:8080/video/static/z/a_002.png" alt=""
 							draggable="false"> <img class="weibo"
-							src="./static/z/a.png" alt="" draggable="false">
+							src="http://localhost:8080/video/static/z/a.png" alt="" draggable="false">
 					</div></li>
 			</ul>
 		</li>
@@ -228,22 +225,20 @@
 	<div class="mask hidden" id="login">
 		<div class="mask_content">
 			<div class="mask_content_header">
-				<img src="./static/z/logo.png" alt="" class="ma">
+				<img src="http://localhost:8080/video/static/z/logo.png" alt="" class="ma">
 			</div>
 			<div class="mask_content_body">
-				<form action="login" method="post">
+				<form action="login" method="post" id="form">
 					<h3>快速登录</h3>
-					<input id="accounts_login" placeholder="请输入邮箱" name="accounts"
-						type="email" onblur="user_accounts_login()"> <span
-						id="account_login"></span> <input id="password_login"
-						placeholder="请输入密码" name="password" type="password"> <span
-						id="password_login"></span>
+					<input placeholder="请输入邮箱" name="accounts" id="userLogin" type="email" onblur="checkLogin()"> 
+						<span id="accountLogin"></span> 
+					<input placeholder="请输入密码" name="password" id="password" type="password"> 
+
 					<div id="forget">
-						<a
-							href="http://localhost:8080/video/front/user/forgetPassword.action">忘记密码？</a>
+						<a href="http://localhost:8080/video/forgetPassword.action">忘记密码？</a>
 					</div>
-					<span id="account"></span> <input id="submitLogin" value="登　录"
-						type="submit">
+					<span id="account"></span> 
+					<input id="submitLogin" value="登　录" type="submit">
 				</form>
 			</div>
 			<div class="mask_content_footer">
@@ -251,21 +246,25 @@
 			</div>
 		</div>
 	</div>
-
+	
+	<!-- 用户注册 -->
 	<div class="mask hidden" id="reg">
 		<div class="mask_content">
 			<div class="mask_content_header">
-				<img src="./static/z/logo.png" alt="" class="ma">
+				<img src="http://localhost:8080/video/static/z/logo.png" alt="" class="ma">
 			</div>
 			<div class="mask_content_body">
 				<form action="insertUser" method="post">
 					<h3>新用户注册</h3>
-					<input placeholder="请输入邮箱" name="accounts" type="email"
-						id="accounts" onblur="user_accounts_reg()"> <span
-						id="emailMsg"></span> <input placeholder="请输入密码" name="password"
-						type="password"> <input placeholder="请再次输入密码"
-						name="psw_again" type="password"> <span id="passMsg"></span>
-					<input value="注　册" type="submit" id="submitReg">
+					<input placeholder="请输入邮箱" name="accounts" type="email" id="accounts" onblur="user_accounts_reg()"> 
+						<span id="emailMsg"></span> 
+					<input placeholder="请输入密码" name="psw" id="psw" type="password" onblur="checkPassword()"> 
+					<input placeholder="请再次输入密码" name="psw_again" type="password" id="psw_again" onblur="checkPassword()"> 
+						<span id="passMsg"></span><br>
+					<button type="button" onclick="verify()" id="getVerifyCode">获取验证码<span id="time">60</span></button>
+					<input type="text" placeholder="请输入验证码" name="Code" id="Code">
+					<input type="hidden" id="checkCode" value="${verifyCode }"><span id="verifyMsg"></span>
+					<input value="注　册" type="submit" id="submitReg" onclick="return insert()">
 				</form>
 			</div>
 			<div class="mask_content_footer">
@@ -310,43 +309,97 @@
 			</div>
 		</div>
 	</form>
-
+	
 	<script type="text/javascript">
-
+	
+		var Code = document.getElementsById("Code").value;
+		var checkCode = document.getElementsById("checkCode").value;
+		if(Code != checkCode){
+			$("#verifyMsg").text("验证码错误").css("color", "red");
+			$("#submitLogin").attr("disabled", true);
+		}else{
+			$("#verifyMsg").text("验证码正确").css("color", "green");
+			$("#submitLogin").attr("disabled", false);
+		}
+	</script>
+	
+	<script type="text/javascript">
+	<!-- 发送验证码，并倒计时 -->
+	function verify() {
+		alert(成功获取验证码);
+		
+		$.ajax({
+			type : "post",
+    		url:"http://localhost:8080/video/getVerifyCode",
+    		data:{
+    			email:$("#accounts").val()
+    		},
+    		
+    	})
+    	
+    	var setTime;
+		var time = 60;
+        $(document).ready(function(){
+            
+            setTime=setInterval(function(){
+                if(time<=0){
+               	 document.getElementById("time").style.display="none";
+               	 $("#getVerifyCode").attr("disabled",false);
+               	 $.post({
+                		url:"http://localhost:8080/video/removeSession",
+                  	})
+                    return;
+                }else{
+               	 $("#getVerifyCode").attr("disabled",true);
+                }
+                time--;
+                $("#time").text(time);
+            },1000);
+        });
+        
+	 }
+	</script>
+	
+	<script type="text/javascript">
 		function back() {
 
 			location.href = "http://localhost:8080/video/index";
 		}
-
+		
 		//用户登录验证
-		function user_accounts_login() {
-			$.post({
-				url : "user_accounts_login",
+		function checkLogin() {
+			$.ajax({
+				type : "post",
+				url : "http://localhost:8080/video/userAccountsLogin",
 				data : {
-					accountsCheck_login : $("#accounts_login").val(),
+					accountsCheckLogin : $("#userLogin").val(),
 				},
 				success : function(data) {
-					if (data == "success") {
+					if (data == 0) {
 						//如果错误，禁止提交
 						$("#submitLogin").attr("disabled", false);
-						$("#account_login").text("邮箱输入正确").css("color", "green");
+						$("#accountLogin").text("邮箱输入正确").css("color", "green");
+					} else if(data == 2) {
+						$("#submitLogin").attr("disabled", true);
+						$("#accountLogin").text("邮箱不能为空").css("color", "red");
 					} else {
 						$("#submitLogin").attr("disabled", true);
-						$("#account_login").text("邮箱输入错误").css("color", "red");
+						$("#accountLogin").text("该邮箱尚未注册").css("color", "red");
 					}
 				}
 			})
 		}
 		//管理员登录验证
 		function accountsAdminCheck() {
-			$.post({
-				url : "accountsAdminCheck",
+			$.ajax({
+				type : "post",
+				url : "http://localhost:8080/video/accountsAdminCheck",
 				data : {
 					accountsAdmin : $("#accountsAdmin").val(),
 
 				},
 				success : function(data) {
-					if (data == "success") {
+					if (data == 1) {
 						//如果错误，禁止提交
 						$("#submitAdmin").attr("disabled", false);
 						$("#i1").text("账号输入正确").css("color", "green");
@@ -357,30 +410,105 @@
 				}
 			})
 		}
-		//注册验证
+		//注册验证(邮箱)
 		function user_accounts_reg() {
-			$.post({
-					url : "user_accounts_reg",
+			$.ajax({
+					type : "post",
+					url : "http://localhost:8080/video/user_accounts_reg",
 					data : {
 						accountsCheck : $("#accounts").val(),
 					},
 					success : function(data) {
-					if (data == "success") {
-						//如果已经注册，禁止提交
-						$("#submitReg").attr("disabled", true);
-						$("#emailMsg").text("该邮箱已注册，请直接登录").css( "color", "red");
-					} else {
-						$("#submitReg").attr("disabled", false);
-						$("#emailMsg").text("该邮箱可用").css("color", "green");
+						if (data == 2) {
+							//如果已经注册，禁止提交
+							$("#submitReg").attr("disabled", true);
+							$("#emailMsg").text("该邮箱已注册，请直接登录").css( "color", "red");
+						} else if(data == 1){
+							$("#submitReg").attr("disabled", true);
+							$("#emailMsg").text("邮箱不能为空").css("color", "red");
+						}else {
+							$("#submitReg").attr("disabled", false);
+							$("#emailMsg").text("该邮箱可用").css("color", "green");
+						}
 					}
-				}
-			})
+				})
+		}
+		
+		//注册验证(密码)
+		function checkPassword() {
+			$.ajax({
+					type : "post",
+					url : "http://localhost:8080/video/checkPassword",
+					data : {
+						psw : $("#psw").val(),
+						psw_again : $("#psw_again").val(),
+					},
+					success : function(data) {
+						if (data == 2) {
+							//如果已经注册，禁止提交
+							$("#submitReg").attr("disabled", true);
+							$("#passMsg").text("两次密码不一致").css( "color", "red");
+						} else if(data == 1){
+							$("#submitReg").attr("disabled", true);
+							$("#passMsg").text("密码不能为空").css("color", "red");
+						}else {
+							$("#submitReg").attr("disabled", false);
+							$("#passMsg").text("两次密码一致").css("color", "green");
+						}
+					}
+				})
+		}
+	</script>
+	
+	<script type="text/javascript">
+	function web() {
+			if (${user.accounts == null}) {
+				alert("请先登录");
+			} else {
+				location.href = "webShow.do?subject_id=" + 1;
+			}
 		}
 
-	
-		
-	<script src="./static/z/jquery-1.js"></script>
+		function ui() {
+			if (${user.accounts == null}) {
+				alert("请先登录");
+			} else {
+				location.href = "webShow.do?subject_id=" + 6;
+			}
+		}
+		function python() {
+			if (${user.accounts == null}) {
+				alert("请先登录");
+			} else {
+				location.href = "webShow.do?subject_id=" + 10;
+			}
+		}
+		function php() {
+			if (${user.accounts == null}) {
+				alert("请先登录");
+			} else {
+				location.href = "webShow.do?subject_id=" + 11;
+			}
+		}
+	</script>
 
-	<script src="./static/z/index.js"></script>
+	<c:if test="${user.accounts != null }">
+		<script type="text/javascript">
+			document.getElementById("login_open").style.display = "none";
+			document.getElementById("reg_open").style.display = "none";
+			document.getElementById("user_pic").style.display = "inline";
+		</script>
+	</c:if>
+
+
+	<c:if test="${msg!=null}">
+		<script type="text/javascript">
+			alert('${msg}');
+		</script>
+	</c:if>
+		
+	<script src="http://localhost:8080/video/static/z/jquery-1.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+	<script src="http://localhost:8080/video/static/z/index.js"></script>
 </body>
 </html>
