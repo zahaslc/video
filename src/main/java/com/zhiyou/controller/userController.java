@@ -1,14 +1,17 @@
 package com.zhiyou.controller;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,12 +23,18 @@ import com.zhiyou.service.PictureService;
 import com.zhiyou.service.UserService;
 import com.zhiyou.utils.MD5Utils;
 import com.zhiyou.utils.MainUtil;
-import com.zhiyou.utils.VideoResult;
 import com.zhiyou.utils.verifyCodeUtils;
 
 @Controller
-public class userController {
+public class userController implements Serializable{
 
+	private static final long serialVersionUID = 1L;
+
+	@Autowired
+    private StringRedisTemplate stringRedisTemplate;
+    @Autowired
+    private RedisTemplate redisTemplate;
+	
 	@Autowired
 	UserService us;
 
@@ -36,6 +45,7 @@ public class userController {
 		model.addAttribute("user", user);
 		return "updateUser";
 	}
+	
 	@RequestMapping("userShow")
 	public String userShow(String accounts,Model model){
 		User user = us.selectByEmail(accounts);
@@ -116,7 +126,6 @@ public class userController {
 		String imgurl = returnType.getUrl();
 		user.setImgurl(imgurl);
 		us.update(user);
-		System.out.println(returnType+"**********"+imgurl+"**************"+file);
 		model.addAttribute("user", user);
 
 		return "updatePic";
@@ -136,8 +145,8 @@ public class userController {
 		System.out.println(user);
 		return "userShow";
 	}
-
-	//登录用户的账号是否存在
+	
+	//登录用户的账号是否存在(找回密码邮箱验证)
 	@RequestMapping("userAccountsLogin")
 	public void userAccountsLogin(HttpServletRequest req,HttpServletResponse resp) throws IOException{
 
@@ -168,7 +177,21 @@ public class userController {
 		}
 		return "index";
 	}
+	
+	@RequestMapping("findPassword")
+	public String findPassword(){
+		return "findPassword";
+	}
 
+	@RequestMapping("updateFindPassword")
+	public String updateFindPassword(String accounts,String psw){
+		User user = us.selectByEmail(accounts);
+		String md5 = MD5Utils.md5(psw);
+		user.setPassword(md5);
+		us.update(user);
+		return "index";
+	}
+	
 	//用户注册
 	@RequestMapping("insertUser")
 	public String insertUser(String accounts,String psw){
@@ -221,7 +244,6 @@ public class userController {
 		String accounts = req.getParameter("email");
 
 		StringBuilder verifyCode = verifyCodeUtils.getVerifyCode();
-		System.out.println(accounts+"*******"+verifyCode);
 		session.setAttribute("verifyCode", verifyCode);
 		MainUtil.setMain(accounts,new String(verifyCode));
 	}

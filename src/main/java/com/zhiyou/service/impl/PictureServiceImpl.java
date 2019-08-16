@@ -2,8 +2,11 @@ package com.zhiyou.service.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,15 +19,20 @@ public class PictureServiceImpl implements PictureService {
 	
 	//从配置文件中取出属性
 
-	private String FTP_ADDRESS = "192.168.177.128";
-
+	/*private String FTP_ADDRESS = "192.168.177.128";
 
 	private String FTP_USERNAME = "zhangzhao";
 	
 	private String FTP_PASSWORD = "zhangzhao";
 	
-	
-	private String FTP_BASE_PATH = "/home/zhangzhao/image";
+	private String FTP_BASE_PATH = "/home/zhangzhao/image";*/
+	@Value("${FTP.ADDRESS}")    private String host;    // 端口
+	@Value("${FTP.PORT}")    private int PORT;    // ftp用户名
+    @Value("${FTP.USERNAME}")    private String USERNAME;    // ftp用户密码
+    @Value("${FTP.PASSWORD}")    private String PASSWORD;    // 文件在服务器端保存的主目录
+    @Value("${FTP.BASEPATH}")    private String BASEPATH;    // 访问图片时的基础url
+    @Value("${IMAGE.BASE.URL}")    private String URL; 
+
 
 	
 	/**
@@ -49,15 +57,18 @@ public class PictureServiceImpl implements PictureService {
 	
 	@Override
 	public ImageReturnType upload(MultipartFile uploadFile) {
-		String imageName = generateImageName()+uploadFile.getOriginalFilename();
-        InputStream inputStream;
+		String oldName = uploadFile.getOriginalFilename();
+		SimpleDateFormat sdf = new SimpleDateFormat("/yyyy/MM/dd");
+		String filePath = sdf.format(new Date());
+		String imageName = generateImageName()+oldName.substring(oldName.lastIndexOf("."));
+		InputStream inputStream;
         
         ImageReturnType imageReturnType = new ImageReturnType();
         try {
         	
         	inputStream = uploadFile.getInputStream();
-			new FtpUtil().upload(FTP_ADDRESS, FTP_USERNAME, FTP_PASSWORD, FTP_BASE_PATH, imageName, inputStream);
-			imageReturnType.setUrl("http://"+FTP_ADDRESS+"/"+imageName);
+			new FtpUtil().uploadFile(host, PORT, USERNAME, PASSWORD, BASEPATH, filePath, imageName, inputStream);
+			imageReturnType.setUrl(URL+filePath+"/"+imageName);
 			
 			imageReturnType.setError(0);
 			return imageReturnType;

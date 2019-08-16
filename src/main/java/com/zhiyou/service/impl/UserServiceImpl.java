@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.zhiyou.mapper.UserDao;
@@ -16,6 +17,7 @@ public class UserServiceImpl implements UserService {
 
 	@Autowired
 	UserDao userDao;
+	
 	public void add(User user) {
 		userDao.add(user);
 
@@ -46,23 +48,26 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public List<User> selectLimit(Map<String, Integer> map) {
-		// TODO Auto-generated method stub
+		
 		return userDao.selectLimit(map);
 	}
-
+	
+	@Override
+	@Cacheable("selectByEmail")
 	public User selectByEmail(String accounts) {
-		
-		return userDao.selectByEmail(accounts);
+		User user = userDao.selectByEmail(accounts);
+		return user;
 	}
 
-
+	@Override
 	public User checkPassword(String email,String password) {
-		// TODO Auto-generated method stub
+		
 		return userDao.checkPassword(email,password);
 	}
-
+	
+	@Override
 	public User selectById(int id) {
-		// TODO Auto-generated method stub
+	
 		return userDao.selectById(id);
 	}
 

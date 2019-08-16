@@ -235,7 +235,7 @@
 					<input placeholder="请输入密码" name="password" id="password" type="password"> 
 
 					<div id="forget">
-						<a href="http://localhost:8080/video/forgetPassword.action">忘记密码？</a>
+						<a href="http://localhost:8080/video/findPassword">忘记密码？</a>
 					</div>
 					<span id="account"></span> 
 					<input id="submitLogin" value="登　录" type="submit">
@@ -263,8 +263,8 @@
 						<span id="passMsg"></span><br>
 					<button type="button" onclick="verify()" id="getVerifyCode">获取验证码<span id="time">60</span></button>
 					<input type="text" placeholder="请输入验证码" name="Code" id="Code">
-					<input type="hidden" id="checkCode" value="${verifyCode }"><span id="verifyMsg"></span>
-					<input value="注　册" type="submit" id="submitReg" onclick="return insert()">
+						<span id="codeMsg"></span>
+					<input value="注　册" type="submit" id="submitReg" onclick="return check(this.form)">
 				</form>
 			</div>
 			<div class="mask_content_footer">
@@ -311,22 +311,27 @@
 	</form>
 	
 	<script type="text/javascript">
-	
-		var Code = document.getElementsById("Code").value;
-		var checkCode = document.getElementsById("checkCode").value;
-		if(Code != checkCode){
-			$("#verifyMsg").text("验证码错误").css("color", "red");
-			$("#submitLogin").attr("disabled", true);
+	function check(form){
+		if(form.Code.value == ""){
+			alert("验证码不能为空");
+			return false;
+		}else if(form.accounts.value == ""){
+			alert("邮箱不能为空");
+			return false;
+		}else if(form.psw.value == ""){
+			alert("密码不能为空");
+			return false;
 		}else{
-			$("#verifyMsg").text("验证码正确").css("color", "green");
-			$("#submitLogin").attr("disabled", false);
+			return true;
 		}
+		
+	}
 	</script>
 	
 	<script type="text/javascript">
 	<!-- 发送验证码，并倒计时 -->
 	function verify() {
-		alert(成功获取验证码);
+		alert("成功获取验证码");
 		
 		$.ajax({
 			type : "post",

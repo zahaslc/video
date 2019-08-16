@@ -3,6 +3,7 @@ package com.zhiyou;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 
 //用来标识SpringBoot的启动项
 //是一个组合注解，出了包括java的4大注解以外，还包括以下
