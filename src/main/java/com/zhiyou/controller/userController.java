@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Controller;
@@ -64,10 +63,10 @@ public class userController implements Serializable{
 		model.addAttribute("user", user);
 		return "updatePassword";
 	}
-	//退出功能
+	//退出，则清除user在session中的信息
 	@RequestMapping("exit")
-	public String exit(){
-
+	public String exit(HttpServletRequest req){
+		req.getSession().invalidate();
 		return "index";
 	}
 	//返回首页
@@ -151,6 +150,7 @@ public class userController implements Serializable{
 	public void userAccountsLogin(HttpServletRequest req,HttpServletResponse resp) throws IOException{
 
 		String accountsCheckLogin = req.getParameter("accountsCheckLogin");
+		System.out.println(accountsCheckLogin);
 		User user = us.selectByEmail(accountsCheckLogin);
 		if(accountsCheckLogin != ""){
 			if(null == user){
@@ -165,15 +165,18 @@ public class userController implements Serializable{
 
 	//登录用户(将用户信息存入cookie，10天后自动销毁，或者手动销毁)
 	@RequestMapping("login")
-	public String login(String accounts,String password,Model model,HttpServletRequest req){
+	public String login(String accounts,String password,Model model,HttpSession session){
 		User user = us.selectByEmail(accounts);
 		String md5 = MD5Utils.md5(password);
 		if(md5.equals(user.getPassword())){
-			req.setAttribute("msg", "密码正确");
+			//model.addAttribute("msg", "密码正确");
+			//登陆成功，则将user信息存入session中
+			session.setAttribute("user", user);
+			session.setMaxInactiveInterval(10*24*60*60*1000);//设置session存在时间10天
 			model.addAttribute("user", user);
 			return "index";
 		}else{
-			req.setAttribute("msg", "密码错误");
+			model.addAttribute("msg", "密码错误");
 		}
 		return "index";
 	}
@@ -250,8 +253,8 @@ public class userController implements Serializable{
 
 	//用户注册(清除session中的验证码)
 	@RequestMapping("removeSession")
-	public void removeSession(HttpServletRequest req){
-		req.getSession().invalidate();
+	public void removeSession(HttpServletRequest req,HttpSession session){
+		session.removeAttribute("verifyCode");
 
 	}
 }

@@ -38,11 +38,11 @@
 	<div class="container">
 		<span>欢迎来到IT培训的黄埔军校——智游教育！</span>
 		<div style="float: right" id="user_bar">
-			<a id="login_open"><img src="static/z/we.png">登录</a> <a
-				id="reg_open"><img src="static/z/we.png" draggable="false">注册</a>
-			<a id="user_pic" style="display: none"
-				href="userShow.do?accounts=${user.accounts }"> <img id="avatar"
-				src="${user.imgurl }" draggable="false" style="height: 30px"></a>
+			<a href="userShow?accounts=${user.accounts }"> <img
+				id="avatar" src="${user.imgurl }" draggable="false"
+				style="height: 30px"></a> 
+				<a href="index?accounts=${user.accounts }">首页</a> 
+				<a href="exit">退出</a>
 		</div>
 
 		<a onclick="JavaScript:addFavorite2()"><img src="static/z/sc.png"
@@ -184,32 +184,6 @@
 	</footer>
 
 
-	<!--登录注册弹出框-->
-	<div class="mask hidden" id="login">
-		<div class="mask_content">
-			<div class="mask_content_header">
-				<img src="./static/z/logo.png" alt="" class="ma">
-			</div>
-			<div class="mask_content_body">
-				<form id="loginForm" action="login.do">
-					<h3>快速登录</h3>
-					<input id="loginEmail" placeholder="请输入邮箱" name="accounts"
-						type="email"> <input id="loginPassword"
-						placeholder="请输入密码" name="password" type="password">
-					<div id="forget">
-						<a
-							href="http://localhost:8080/video/front/user/forgetPassword.action">忘记密码？</a>
-					</div>
-					<input onclick="return commitLogin()" value="登　录" type="submit">
-				</form>
-			</div>
-			<div class="mask_content_footer">
-				<span id="login_close">关 闭</span>
-			</div>
-		</div>
-	</div>
-
-	
 
 	<script type="text/javascript">
 		function back() {
@@ -217,47 +191,6 @@
 			location.href = "http://localhost:8080/video/index";
 		}
 	</script>
-	<div class="mask hidden" id="reg">
-		<div class="mask_content">
-			<div class="mask_content_header">
-				<img src="./static/z/logo.png" alt="" class="ma">
-			</div>
-			<div class="mask_content_body">
-				<form id="regForm" action="insertUser.do">
-					<h3>新用户注册</h3>
-					<input id="regEmail" placeholder="请输入邮箱" name="accounts"
-						type="email" onblur="user_accounts()"><span id="emailMsg"></span><i
-						id="i"></i> <input id="regPsw" placeholder="请输入密码" name="password"
-						type="password"> <input id="regPswAgain"
-						placeholder="请再次输入密码" name="psw_again" type="password"><span
-						id="passMsg"></span>
-					<div id="yzm" class="form-inline">
-						<input name="yzm" style="width: 45%; display: inline-block;"
-							type="text">
-						<div id="v_container"
-							style="width: 45%; height: 40px; float: right;">
-							<canvas id="verifyCanvas" width="100" height="38"
-								style="cursor: pointer;">您的浏览器版本不支持canvas</canvas>
-							<canvas id="verifyCanvas" width="100" height="38"
-								style="cursor: pointer;">您的浏览器版本不支持canvas</canvas>
-						</div>
-					</div>
-					<input value="注　册" type="submit">
-				</form>
-			</div>
-			<div class="mask_content_footer">
-				<span id="reg_close">关 闭</span>
-			</div>
-		</div>
-	</div>
-	<c:if test="${accounts != null }">
-		<script type="text/javascript">
-			document.getElementById("login_open").style.display = "none";
-			document.getElementById("reg_open").style.display = "none";
-			document.getElementById("user_pic").style.display = "inline";
-		</script>
-	</c:if>
-
 
 	<script src="./static/z/jquery-1.js"></script>
 	<script src="./static/z/gVerify.js"></script>

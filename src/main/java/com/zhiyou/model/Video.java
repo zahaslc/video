@@ -1,7 +1,13 @@
 package com.zhiyou.model;
 
-public class Video {
+import java.io.Serializable;
 
+public class Video  implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer video_id;
 	private String title;
 	private String detall;

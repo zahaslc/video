@@ -1,7 +1,13 @@
 package com.zhiyou.model;
 
-public class Subject {
+import java.io.Serializable;
 
+public class Subject  implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer subject_id;
 	private String subject_name;
 	

@@ -261,7 +261,7 @@
 					<input placeholder="请输入密码" name="psw" id="psw" type="password" onblur="checkPassword()"> 
 					<input placeholder="请再次输入密码" name="psw_again" type="password" id="psw_again" onblur="checkPassword()"> 
 						<span id="passMsg"></span><br>
-					<button type="button" onclick="verify()" id="getVerifyCode">获取验证码<span id="time">60</span></button>
+					<button type="button" onclick="verify()" id="getVerifyCode" style="">获取验证码<span id="time">60</span></button>
 					<input type="text" placeholder="请输入验证码" name="Code" id="Code">
 						<span id="codeMsg"></span>
 					<input value="注　册" type="submit" id="submitReg" onclick="return check(this.form)">
@@ -408,6 +408,9 @@
 						//如果错误，禁止提交
 						$("#submitAdmin").attr("disabled", false);
 						$("#i1").text("账号输入正确").css("color", "green");
+					} else if(data == 2) {
+						$("#submitAdmin").attr("disabled", true);
+						$("#i1").text("账号不能为空").css("color", "red");
 					} else {
 						$("#submitAdmin").attr("disabled", true);
 						$("#i1").text("账号输入错误").css("color", "red");
@@ -429,7 +432,8 @@
 							$("#submitReg").attr("disabled", true);
 							$("#emailMsg").text("该邮箱已注册，请直接登录").css( "color", "red");
 						} else if(data == 1){
-							$("#submitReg").attr("disabled", true);
+							$("#submitReg").attr("disabled", true); 
+							document.all("submitReg").disabled=true;
 							$("#emailMsg").text("邮箱不能为空").css("color", "red");
 						}else {
 							$("#submitReg").attr("disabled", false);
@@ -470,7 +474,7 @@
 			if (${user.accounts == null}) {
 				alert("请先登录");
 			} else {
-				location.href = "webShow.do?subject_id=" + 1;
+				location.href = "webShow?subject_id=" + 1;
 			}
 		}
 
@@ -478,21 +482,21 @@
 			if (${user.accounts == null}) {
 				alert("请先登录");
 			} else {
-				location.href = "webShow.do?subject_id=" + 6;
+				location.href = "webShow?subject_id=" + 6;
 			}
 		}
 		function python() {
 			if (${user.accounts == null}) {
 				alert("请先登录");
 			} else {
-				location.href = "webShow.do?subject_id=" + 10;
+				location.href = "webShow?subject_id=" + 10;
 			}
 		}
 		function php() {
 			if (${user.accounts == null}) {
 				alert("请先登录");
 			} else {
-				location.href = "webShow.do?subject_id=" + 11;
+				location.href = "webShow?subject_id=" + 11;
 			}
 		}
 	</script>

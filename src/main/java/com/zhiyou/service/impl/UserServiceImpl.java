@@ -15,6 +15,11 @@ import com.zhiyou.service.UserService;
 @Service
 public class UserServiceImpl implements UserService {
 
+	public String userKey(Long id) {
+		String ke = "REDIS_ITEM_KEY:"+String.valueOf(id)+"User";
+		return ke;
+	}
+	
 	@Autowired
 	UserDao userDao;
 	

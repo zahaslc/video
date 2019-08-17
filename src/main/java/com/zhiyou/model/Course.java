@@ -1,8 +1,13 @@
 package com.zhiyou.model;
 
+import java.io.Serializable;
 
-public class Course {
+public class Course  implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Integer id;
 	private String course_title;
 	private String course_desc;
